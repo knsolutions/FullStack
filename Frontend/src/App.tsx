@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { MsalProvider } from "@azure/msal-react";
+import { IPublicClientApplication } from "@azure/msal-browser";
+import { AuthenticatedTemplate, UnauthenticatedTemplate } from "@azure/msal-react";
+import { ExampleComponent } from "./components/ExampleComponent";
+import { useMsal } from "@azure/msal-react";
+import { useAuth } from "./services/AuthService";
 
-function App() {
-  const [count, setCount] = useState(0)
+
+type AppProps = {
+  pca: IPublicClientApplication;
+};
+
+const App: React.FC<AppProps> = ({ pca }) => {
+
+    const { logIn, logOut } = useAuth();
+    const { accounts } = useMsal();
+
 
   return (
-    <>
+    <MsalProvider instance={pca}>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1>My App</h1>
+        <AuthenticatedTemplate>
+          <p>Welcome, {accounts[0]?.name}</p>
+          <button onClick={logOut}>Logout</button>
+          <ExampleComponent />
+        </AuthenticatedTemplate>
+        <UnauthenticatedTemplate>
+          <button onClick={logIn}>Login</button>
+        </UnauthenticatedTemplate>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    </MsalProvider>
+  );
+};
 
-export default App
+export default App;

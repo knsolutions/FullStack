@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { apiService } from "../services";
+import { useAuth } from "../services/AuthService";  
+
+
 
 interface DataType {
   id: number;
@@ -9,14 +12,15 @@ interface DataType {
 
 export const ExampleComponent: React.FC = () => {
   const [data, setData] = useState<DataType | null>(null);
+  const { getAccessToken } = useAuth();  
+
 
   useEffect(() => {
-    // Set the authorization token
-    apiService.setAuthToken("your-token-here");
 
-    // Example GET request with query parameters
     const fetchData = async () => {
       try {
+        const token = await getAccessToken();
+        apiService.setAuthToken(token);
         const result = await apiService.get<DataType>("/endpoint", {
           filter: "value",
         });
