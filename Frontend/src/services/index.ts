@@ -1,7 +1,6 @@
 import { ApiService } from "./ApiService";
+import { API_BASE_URL } from "../config";  
 
-const BaseUrl = import.meta.env.VITE_API_URL;
-
-const apiService = new ApiService(BaseUrl);
+const apiService = new ApiService(API_BASE_URL);
 
 export { apiService };

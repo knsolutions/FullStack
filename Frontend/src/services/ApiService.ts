@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import { IApiService } from "./IApiService";
-import { handleError } from "../utils/errorHandler";
 
 export class ApiService implements IApiService {
   private api: AxiosInstance;
