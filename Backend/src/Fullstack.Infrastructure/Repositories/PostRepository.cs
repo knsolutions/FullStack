@@ -1,6 +1,7 @@
 ﻿using Fullstack.Application.Abstractions;
 using Fullstack.Domain.Entities;
 using Fullstack.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fullstack.Infrastructure.Repositories
 {
@@ -15,12 +16,12 @@ namespace Fullstack.Infrastructure.Repositories
 
         public async Task<ICollection<Post>> GetAllPosts()
         {
-            throw new NotImplementedException();
+            return await _context.Posts.ToListAsync();
         }
 
-        public Task<Post> GetPostById(int postId)
+        public async Task<Post> GetPostById(int postId)
         {
-            throw new NotImplementedException();
+            return await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
         }
 
         public async Task<Post> CreatePost(Post toCreate)
@@ -32,14 +33,31 @@ namespace Fullstack.Infrastructure.Repositories
             return toCreate;
         }
 
-        public Task<Post> UpdatePost(Post updatedContent, int postId)
+        public async Task<Post> UpdatePost(Post updatedContent, int postId)
         {
-            throw new NotImplementedException();
+            var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+
+            post.ModifiedAt = DateTime.Now;
+            post.Content = updatedContent.Content;
+
+            await _context.SaveChangesAsync();
+
+            return post;
+
+
         }
 
-        public Task DeletePost(int postId)
+        public async Task DeletePost(int postId)
         {
-            throw new NotImplementedException();
+            var post = await _context.Posts
+            .FirstOrDefaultAsync(p => p.Id == postId);
+
+            if (post == null) return;
+
+            _context.Posts.Remove(post);
+
+            await _context.SaveChangesAsync();        
+          
         }
     }
 };
