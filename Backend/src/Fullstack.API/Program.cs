@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
+using Microsoft.Extensions.DependencyInjection;  
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+/*
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+*/
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -24,9 +27,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+/*
 app.UseAuthentication();
 app.UseAuthorization();
+*/
 
-app.MapControllers();
+app.MapGet("/", () => "Hello World!");
+
+//app.MapControllers();
 
 app.Run();

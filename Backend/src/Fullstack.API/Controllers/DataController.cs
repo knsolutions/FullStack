@@ -1,21 +1,25 @@
 ﻿using Microsoft.AspNetCore.Mvc;  
-using Fullstack.API.Models;
 using System.Collections.Generic;  
 using System.Linq;
 using Microsoft.AspNetCore.Authorization;
- using System.Security.Claims;  
+using System.Security.Claims;
+using Fullstack.Application.Models;
+using MediatR;
+
 
 namespace Fullstack.API.Controllers;
 
 
 [Route("api/[controller]")]  
 [ApiController]  
-public class DataController : ControllerBase  
-{  
-    private static List<DataModel> dataStore = new List<DataModel>();  
+public class DataController(IMediator mediator) : ControllerBase  
+{
+
+    private readonly IMediator _mediator = mediator;
+    private static List<DataModelDto> dataStore = new List<DataModelDto>();  
 
     [HttpGet]  
-    public ActionResult<IEnumerable<DataModel>> Get([FromQuery] string filter = "")  
+    public ActionResult<IEnumerable<DataModelDto>> Get([FromQuery] string filter = "")  
     {  
         if (string.IsNullOrEmpty(filter))  
         {  
@@ -26,9 +30,11 @@ public class DataController : ControllerBase
         return Ok(filteredData);  
     }  
 
-    [Authorize]  
-    [HttpPost]  
-    public ActionResult<DataModel> Post([FromBody] DataModel data)  
+    /*
+    [Authorize]
+    // [RequiredScope(RequiredScopesConfigurationKey = "AzureAd:Scopes")]
+    [HttpPost] 
+    public ActionResult<DataModelDto> Post([FromBody] DataModelDto data)  
     {  
         var username = User.FindFirst(ClaimTypes.Name)?.Value;  
         if (username == null)  
@@ -40,10 +46,11 @@ public class DataController : ControllerBase
         data.CreatedBy = username; // Assuming you have a CreatedBy property in your DataModel  
         dataStore.Add(data);  
         return CreatedAtAction(nameof(GetById), new { id = data.Id }, data);  
-    }  
+    }
+     
 
     [HttpGet("{id}")]  
-    public ActionResult<DataModel> GetById(int id)  
+    public ActionResult<DataModelDto> GetById(int id)  
     {  
         var data = dataStore.FirstOrDefault(d => d.Id == id);  
         if (data == null)  
@@ -55,7 +62,7 @@ public class DataController : ControllerBase
 
     [Authorize]
     [HttpPut("{id}")]  
-    public ActionResult<DataModel> Put(int id, [FromBody] DataModel updatedData)  
+    public ActionResult<DataModelDto> Put(int id, [FromBody] DataModelDto updatedData)  
     {  
         var data = dataStore.FirstOrDefault(d => d.Id == id);  
         if (data == null)  
@@ -80,5 +87,6 @@ public class DataController : ControllerBase
 
         dataStore.Remove(data);  
         return NoContent();  
-    }  
+    }
+    */ 
 }
