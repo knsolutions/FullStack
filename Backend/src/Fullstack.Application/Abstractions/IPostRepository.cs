@@ -10,7 +10,7 @@ namespace Fullstack.Application.Abstractions
 
         Task<Post> CreatePost(Post toCreate);
 
-        Task<Post> UpdatePost(Post updatedContent, int postId);
+        Task<Post> UpdatePost(string updatedContent, int postId);
 
         Task DeletePost(int postId);
     }

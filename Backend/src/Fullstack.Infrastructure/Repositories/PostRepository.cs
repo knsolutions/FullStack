@@ -16,12 +16,12 @@ namespace Fullstack.Infrastructure.Repositories
 
         public async Task<ICollection<Post>> GetAllPosts()
         {
-            return await _context.Posts.ToListAsync();
+            return await _context.Posts.AsNoTracking().ToListAsync();
         }
 
         public async Task<Post> GetPostById(int postId)
         {
-            return await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
+            return await _context.Posts.AsNoTracking().FirstOrDefaultAsync(p => p.Id == postId);
         }
 
         public async Task<Post> CreatePost(Post toCreate)
@@ -33,17 +33,16 @@ namespace Fullstack.Infrastructure.Repositories
             return toCreate;
         }
 
-        public async Task<Post> UpdatePost(Post updatedContent, int postId)
+        public async Task<Post> UpdatePost(string updatedContent, int postId)
         {
             var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == postId);
 
             post.ModifiedAt = DateTime.Now;
-            post.Content = updatedContent.Content;
+            post.Content = updatedContent;
 
             await _context.SaveChangesAsync();
 
             return post;
-
 
         }
 
